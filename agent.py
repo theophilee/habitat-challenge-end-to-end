@@ -184,23 +184,32 @@ def main():
     obs = env.reset()
 
     print(obs.keys())
+    # goal_id_to_coco_id = {
+    #     0: 0,  # chair
+    #     1: 3,  # bed
+    #     2: 2,  # potted plant
+    #     3: 4,  # toilet
+    #     4: 5,  # tv
+    #     5: 1,  # couch
+    # }
     print("objectgoal", obs["objectgoal"])
-    print("gps", obs["gps"])
-    print("compass", obs["compass"])         # in [-np.pi, np.pi]
-    print("rgb.shape", obs["rgb"].shape)
-    print("rgb.dtype", obs["rgb"].dtype)
-    print("rgb.max()", obs["rgb"].max())
-    print("depth.shape", obs["depth"].shape)
-    print("depth.dtype", obs["depth"].dtype)
-    print("depth.max()", obs["depth"].max())
+    print("gps", obs["gps"])                  # (x, y) in TODO What is the unit?
+    print("compass", obs["compass"])          # yaw in [-np.pi, np.pi]
+    print("rgb.shape", obs["rgb"].shape)      # (480, 640, 3) => TODO (640, 480, 3)
+    print("rgb.dtype", obs["rgb"].dtype)      # uint8
+    print("rgb.max()", obs["rgb"].max())      # 255
+    print("depth.shape", obs["depth"].shape)  # (480, 640, 1) => TODO (640, 480, 1)
+    print("depth.dtype", obs["depth"].dtype)  # float32
+    print("depth.max()", obs["depth"].max())  # 1.0 => TODO How exactly is depth range threshold applied?
 
-    # agent.reset()
-    #
-    # while not env.episode_over:
-    #     action = agent.act(obs)
-    #     obs = env.step(action)
-    #
-    # print(env.get_metrics())
+    agent.reset()
+
+    while not env.episode_over:
+        action = agent.act(obs)
+        obs = env.step(action)
+        print(obs['gps'])
+
+    print(env.get_metrics())
 
 
 if __name__ == "__main__":
