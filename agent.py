@@ -164,7 +164,7 @@ class RLSegFTAgent(Agent):
 def main():
     challenge_config_file = "configs/challenge_objectnav2022.local.rgbd.yaml"
     agent_config_file = "configs/rl_objectnav_sem_seg.yaml"
-    model_path = "ckpt/model.pth"
+    model_path = "ckpts/model.pth"
 
     config = get_config(agent_config_file, ['BASE_TASK_CONFIG_PATH', challenge_config_file])
     config.defrost()
