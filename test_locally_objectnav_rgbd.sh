@@ -26,7 +26,6 @@ challenge=$3
 # echo $challenge
 
 docker run -v $(pwd)/habitat-challenge-data:/habitat-challenge-data \
-    -v /coc/dataset/habitat-sim-datasets/hm3d/:/habitat-challenge-data/data/scene_datasets/hm3d/ \
     -v $(pwd)/logs:/logs \
     --runtime=nvidia \
     -e "AGENT_EVALUATION_TYPE=local" \
