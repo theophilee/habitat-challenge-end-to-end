@@ -46,5 +46,5 @@ TASK:
 DATASET:
   TYPE: ObjectNav-v1
   SPLIT: val_mini
-  DATA_PATH: "habitat-challenge-data/objectgoal_hm3d/{split}/{split}.json.gz"
+  DATA_PATH: "habitat-challenge-data/data/datasets/objectnav/hm3d/{split}/{split}.json.gz"
   SCENES_DIR: "habitat-challenge-data/data/scene_datasets/"
