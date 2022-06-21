@@ -182,13 +182,16 @@ def main():
     env = Env(config=config.TASK_CONFIG)
 
     obs = env.reset()
-    agent.reset()
 
-    while not env.episode_over:
-        action = agent.act(obs)
-        obs = env.step(action)
+    print(obs.keys())
 
-    print(env.get_metrics())
+    # agent.reset()
+    #
+    # while not env.episode_over:
+    #     action = agent.act(obs)
+    #     obs = env.step(action)
+    #
+    # print(env.get_metrics())
 
 
 if __name__ == "__main__":
