@@ -184,6 +184,15 @@ def main():
     obs = env.reset()
 
     print(obs.keys())
+    print("object_goal", obs["object_goal"])
+    print("gps", obs["gps"])
+    print("compass", obs["compass"])         # in [-np.pi, np.pi]
+    print("rgb.shape", obs["rgb"].shape)
+    print("rgb.dtype", obs["rgb"].dtype)
+    print("rgb.max()", obs["rgb"].max())
+    print("depth.shape", obs["depth"].shape)
+    print("depth.dtype", obs["depth"].dtype)
+    print("depth.max()", obs["depth"].max())
 
     # agent.reset()
     #
