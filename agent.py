@@ -184,7 +184,7 @@ def main():
     obs = env.reset()
 
     print(obs.keys())
-    print("object_goal", obs["object_goal"])
+    print("objectgoal", obs["objectgoal"])
     print("gps", obs["gps"])
     print("compass", obs["compass"])         # in [-np.pi, np.pi]
     print("rgb.shape", obs["rgb"].shape)
