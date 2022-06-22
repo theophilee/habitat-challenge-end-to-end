@@ -22,7 +22,10 @@ class RLSegFTAgent(Agent):
             raise Exception(
                 "Model checkpoint wasn't provided, quitting."
             )
-        self.device = torch.device("cuda:{}".format(config.TORCH_GPU_ID))
+        if config.TORCH_GPU_ID >= 0:
+            self.device = torch.device("cuda:{}".format(config.TORCH_GPU_ID))
+        else:
+            self.device = torch.device("cpu")
 
         ckpt_dict = torch.load(config.MODEL_PATH, map_location=self.device)["state_dict"]
         ckpt_dict = {
@@ -163,12 +166,12 @@ class RLSegFTAgent(Agent):
 
 def main():
     challenge_config_file = "configs/challenge_objectnav2022.local.rgbd.yaml"
-    agent_config_file = "configs/rl_objectnav_sem_seg.yaml"
+    agent_config_file = "configs/rl_objectnav_sem_seg_hm3d.yaml"
     model_path = "ckpt/model.pth"
 
     config = get_config(agent_config_file, ['BASE_TASK_CONFIG_PATH', challenge_config_file])
     config.defrost()
-    config.TORCH_GPU_ID = 0
+    config.TORCH_GPU_ID = -1
     config.MODEL_PATH = model_path
     seed = 7
     random.seed(seed)
