@@ -1,6 +1,7 @@
 FROM fairembodied/habitat-challenge:testing_2022_habitat_base_docker
 
 RUN /bin/bash -c ". activate habitat; pip install torch==1.8.0+cu111 torchvision==0.9.0+cu111 torchaudio==0.8.0 -f https://download.pytorch.org/whl/torch_stable.html; pip install pillow==6.1"
+RUN /bin/bash -c ". activate habitat; python -m pip install git+https://github.com/facebookresearch/detectron2.git"
 
 ADD rl_semseg_agent.py agent.py
 ADD submission.sh submission.sh

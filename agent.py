@@ -14,6 +14,7 @@ from src import POLICY_CLASSES
 from src.default import get_config
 from src.models.common import batch_obs
 from src.models.rednet import load_rednet
+from src.segmentation.coco_segmentation_model import COCOSegmentationModel
 
 
 class RLSegFTAgent(Agent):
@@ -101,13 +102,16 @@ class RLSegFTAgent(Agent):
 
         if self.model_cfg.USE_SEMANTICS:
             logger.info("setting up sem seg predictor")
-            self.semantic_predictor = load_rednet(
-                self.device,
-                ckpt=self.model_cfg.SEMANTIC_ENCODER.rednet_ckpt,
-                resize=True,  # Since we train on half-vision
-                num_classes=self.model_cfg.SEMANTIC_ENCODER.num_classes
+            # self.semantic_predictor = load_rednet(
+            #     self.device,
+            #     ckpt=self.model_cfg.SEMANTIC_ENCODER.rednet_ckpt,
+            #     resize=True,  # Since we train on half-vision
+            #     num_classes=self.model_cfg.SEMANTIC_ENCODER.num_classes
+            # )
+            # self.semantic_predictor.eval()
+            self.semantic_predictor = COCOSegmentationModel(
+                sem_pred_prob_thr=0.9, sem_gpu_id=config.TORCH_GPU_ID, visualize=False
             )
-            self.semantic_predictor.eval()
 
         # Load other items
         self.test_recurrent_hidden_states = torch.zeros(
@@ -146,9 +150,14 @@ class RLSegFTAgent(Agent):
 
         with torch.no_grad():
             if self.semantic_predictor is not None:
-                batch["semantic"] = self.semantic_predictor(batch["rgb"], batch["depth"])
-                if self.config.MODEL.SEMANTIC_ENCODER.is_thda:
-                    batch["semantic"] = batch["semantic"] - 1
+                # batch["semantic"] = self.semantic_predictor(batch["rgb"], batch["depth"])
+                # if self.config.MODEL.SEMANTIC_ENCODER.is_thda:
+                #     batch["semantic"] = batch["semantic"] - 1
+                semantic, semantic_vis = self.semantic_predictor.get_prediction(
+                    batch["rgb"].cpu().numpy(),
+                    batch["depth"].cpu().numpy()
+                )
+                batch["semantic"] = torch.from_numpy(semantic).to(batch["rgb"].device)
 
             logits, self.test_recurrent_hidden_states = self.model(
                 batch,
