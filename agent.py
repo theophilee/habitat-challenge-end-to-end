@@ -149,6 +149,7 @@ class RLSegFTAgent(Agent):
                 batch["semantic"] = self.semantic_predictor(batch["rgb"], batch["depth"])
                 if self.config.MODEL.SEMANTIC_ENCODER.is_thda:
                     batch["semantic"] = batch["semantic"] - 1
+
             logits, self.test_recurrent_hidden_states = self.model(
                 batch,
                 self.test_recurrent_hidden_states,
@@ -171,7 +172,7 @@ def main():
 
     config = get_config(agent_config_file, ['BASE_TASK_CONFIG_PATH', challenge_config_file])
     config.defrost()
-    config.TORCH_GPU_ID = -1
+    config.TORCH_GPU_ID = 0
     config.MODEL_PATH = model_path
     seed = 7
     random.seed(seed)
@@ -185,33 +186,14 @@ def main():
     env = Env(config=config.TASK_CONFIG)
 
     obs = env.reset()
-
-    print(obs.keys())
-    # goal_id_to_coco_id = {
-    #     0: 0,  # chair
-    #     1: 3,  # bed
-    #     2: 2,  # potted plant
-    #     3: 4,  # toilet
-    #     4: 5,  # tv
-    #     5: 1,  # couch
-    # }
-    print("objectgoal", obs["objectgoal"])
-    print("gps", obs["gps"])                  # (x, y) in meters — sign and (x, y) order might be inverted
-    print("compass", obs["compass"])          # yaw in [-np.pi, np.pi]
-    print("rgb.shape", obs["rgb"].shape)      # (480, 640, 3) => TODO (640, 480, 3)
-    print("rgb.dtype", obs["rgb"].dtype)      # uint8
-    print("rgb.max()", obs["rgb"].max())      # 255
-    print("depth.shape", obs["depth"].shape)  # (480, 640, 1) => TODO (640, 480, 1)
-    print("depth.dtype", obs["depth"].dtype)  # float32
-    print("depth.max()", obs["depth"].max())  # in [0.0, 1.0] corresponding to [0.5, 4.0] => TODO How to pre-process robot depth frame into this format?
-
     agent.reset()
 
+    t = 0
     while not env.episode_over:
+        t += 1
+        print(t)
         action = agent.act(obs)
         obs = env.step(action)
-
-    print(env.get_metrics())
 
 
 if __name__ == "__main__":
