@@ -201,6 +201,7 @@ def main():
     while not env.episode_over:
         t += 1
         print(t)
+        print("max depth", obs["depth"].max())
         action = agent.act(obs)
         obs = env.step(action)
 
